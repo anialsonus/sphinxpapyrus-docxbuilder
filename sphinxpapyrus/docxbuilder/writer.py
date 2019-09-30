@@ -9,30 +9,28 @@
     :license: MIT, see LICENSE for details.
 """
 
-import sys
+import glob
 import os
 import re
+import sys
 
 from docutils import nodes, writers
-
 from sphinx import addnodes
-from sphinx.locale import admonitionlabels, _
+from sphinx.locale import _, admonitionlabels
 from sphinx.util import logging
 
 from docx import Document
 from docx.enum.table import WD_TABLE_ALIGNMENT
-from docx.enum.text import WD_BREAK
-from docx.enum.text import WD_TAB_ALIGNMENT
-from docx.enum.text import WD_TAB_LEADER
+from docx.enum.text import WD_BREAK, WD_TAB_ALIGNMENT, WD_TAB_LEADER
+from docx.oxml import register_element_cls
+from docx.oxml.simpletypes import XsdInt
+# monkey patch
+from docx.oxml.xmlchemy import BaseOxmlElement, ZeroOrOne
 
 package_dir = os.path.abspath(os.path.dirname(__file__))
 
 logger = logging.getLogger(__name__)
 
-# monkey patch
-from docx.oxml.xmlchemy import BaseOxmlElement, ZeroOrOne
-from docx.oxml.simpletypes import XsdInt
-from docx.oxml import register_element_cls
 class CT_TrPr(BaseOxmlElement):
     tblHeader = ZeroOrOne('w:tblHeader')
 register_element_cls('w:trPr', CT_TrPr)
@@ -697,7 +695,7 @@ class DocxTranslator(nodes.NodeVisitor):
             atts['height'] = node['height']
         if 'scale' in node:
             pass
-        image_fullpath = os.path.join(self.builder.srcdir, uri)
+        image_fullpath = glob.glob(os.path.join(self.builder.srcdir, uri))[0]
         block_width = self.docx._block_width
         if isinstance(node.parent, nodes.substitution_definition):
             pass
