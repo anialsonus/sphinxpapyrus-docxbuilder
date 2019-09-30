@@ -695,10 +695,10 @@ class DocxTranslator(nodes.NodeVisitor):
             atts['height'] = node['height']
         if 'scale' in node:
             pass
-        image_path = glob.glob(os.path.join(self.builder.srcdir, uri).split(':')[0])
-        path_list = os.path.join(self.builder.srcdir, uri).split(':')
-        path_list[0] = image_path[0]
-        image_fullpath = ":".join(path_list)
+        # image_path = glob.glob(os.path.join(self.builder.srcdir, uri).split(':')[0])
+        # path_list = os.path.join(self.builder.srcdir, uri).split(':')
+        # path_list[0] = image_path[0]
+        image_fullpath = glob.glob(os.path.join(self.builder.srcdir, uri).split(':')[0])[0]
         block_width = self.docx._block_width
         if isinstance(node.parent, nodes.substitution_definition):
             pass
